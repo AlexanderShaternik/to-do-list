@@ -23,10 +23,10 @@ function addTask() {
 
 	// date check
 	let invalid = date_content.split('.');
-	console.log(+invalid[0],invalid[1],invalid[2]);
-	if((32 < +invalid[0] < 0) || isNaN(+invalid[0])) return;
-	if(13 < +invalid[1] < 0 || isNaN(+invalid[1])) return;
-	if(2018> +invalid[2] || isNaN(+invalid[2])) return;
+	console.log(+invalid[0],+invalid[1],+invalid[2]);
+	if(( +invalid[0] < 1) || (31 < +invalid[0])  || isNaN(+invalid[0])) return;
+	if(( +invalid[1] < 1) || (12 < +invalid[1]) || isNaN(+invalid[1])) return;
+	if((2018> +invalid[2]) || isNaN(+invalid[2])) return;
 	// if((invalid[0] == undefined) || (invalid[1] == undefined) || (invalid[2] == undefined) ) return;
 	
 	if ( content == "" || date_content=="" ) return;
