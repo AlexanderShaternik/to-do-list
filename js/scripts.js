@@ -1,5 +1,5 @@
-// Добавление таска
-var add_task = document.querySelector('.add-task-btn');
+// event tracking
+let add_task = document.querySelector('.add-task-btn');
 add_task.addEventListener('click', addTask);
 
 document.addEventListener("keydown", function(event) {
@@ -8,71 +8,74 @@ document.addEventListener("keydown", function(event) {
   }
 })
 
-// дата
-var now = new Date();
-var date_now = document.querySelector('.date');
+// date
+let now = new Date();
+let date_now = document.querySelector('.date');
 date_now.placeholder= +now.getDate()+'.'+now.getMonth()+1+'.' +now.getFullYear();
-
 // console.log(add_task,date_now);
 
 function addTask() {
-	// контент из input.add-task,.date
-	var field 		    = document.querySelector('.add-task');
-	var content 	    = field.value;
-	var task_container 	= document.querySelector('.task-container');
-	var date_content    = date_now.value;
+	// content from input.add-task, .date
+	let field 		    = document.querySelector('.add-task');
+	let content 	    = field.value;
+	let task_container 	= document.querySelector('.task-container');
+	let date_content    = date_now.value;
 
-	// console.log(content,date_content );
+	// date check
+	let invalid = date_content.split('.');
+	console.log(+invalid[0],invalid[1],invalid[2]);
+	if((32 < +invalid[0] < 0) || isNaN(+invalid[0])) return;
+	if(13 < +invalid[1] < 0 || isNaN(+invalid[1])) return;
+	if(2018> +invalid[2] || isNaN(+invalid[2])) return;
+	// if((invalid[0] == undefined) || (invalid[1] == undefined) || (invalid[2] == undefined) ) return;
+	
+	if ( content == "" || date_content=="" ) return;
 
-	if ( content == ""|| date_content=="" ) return;
-
-	// создать task_box и его содержимое
-	var task_box   = document.createElement('div');
-	var input      = document.createElement('input');
-	var task       = document.createElement('p');
-	var task_date  = document.createElement('p');
-	var button_del = document.createElement('button');
+	// сreate task_box
+	let task_box   = document.createElement('div');
+	let input      = document.createElement('input');
+	let task       = document.createElement('p');
+	let task_date  = document.createElement('p');
+	let button_del = document.createElement('button');
 	button_del.classList.add('delete-task-btn');
 	task_box.classList.add('task-box');
 	input.setAttribute('type','checkbox');
 	task.textContent = content; 
 	task_date.textContent =date_content;
 	button_del.textContent = 'Удалить';
-	// наполняем task_box
+	// fill task_box with contents
 	task_box.appendChild(input);
 	task_box.appendChild(button_del);
 	task_box.appendChild(task);
 	task_box.appendChild(task_date);
 	
 	console.log(task_box);
-	//выводим  task_box
+
 	task_container.appendChild(task_box);
 	field.value = '';
 	date_now.value = '';
 	
 	input.addEventListener('click', checkTask);
 
-	
-	var arr_delete_task = document.querySelectorAll('.delete-task-btn');
+	let arr_delete_task = document.querySelectorAll('.delete-task-btn');
 	console.log(arr_delete_task)	
-	for (var i = 0; i < arr_delete_task.length; i++) {
+	for (let i = 0; i < arr_delete_task.length; i++) {
 		arr_delete_task[i].addEventListener('click', removeTask);
 	}
 }
 
-// Удаление таска
-
+// delete task
 function removeTask() {
-	var elem 	= this;
-	var parent 	= elem.parentElement;
-	var box 	= parent.parentElement;
+	let elem 	= this;
+	let parent 	= elem.parentElement;
+	let box 	= parent.parentElement;
 	box.removeChild(parent);
 }
 
-// зачеркиваем выполненый таск
+// line-through completed task
 function checkTask() {
-	var elem 	= this;
-	var parent 	= elem.parentElement;
+	let elem 	= this;
+	let parent 	= elem.parentElement;
 	if ( elem.checked ) {
 		parent.classList.add('active');
 	} else {
