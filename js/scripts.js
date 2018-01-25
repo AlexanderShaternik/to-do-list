@@ -15,9 +15,7 @@ date_now.placeholder= +now.getDate()+'.'+now.getMonth()+1+'.' +now.getFullYear()
 
 let count = 0;
 let todo = [];
-let out = JSON.parse(localStorage.getItem("todo"));
-// console.log("out" ,out);
-// console.log("todo" ,todo);
+// let out = JSON.parse(localStorage.getItem("todo"));
 
 function Task(content,date,isChecked,id) {
 	this.content   = content,
@@ -27,14 +25,15 @@ function Task(content,date,isChecked,id) {
 }
 
 // unload from localSrorage
-if(out != null ) { 
+if(JSON.parse(localStorage.getItem("todo")) != null ) { 
+	todo = JSON.parse(localStorage.getItem("todo"));
 	replace()
 }
 
 function replace(){
 	let task_container 	= document.querySelector('.task-container');
 	task_container.innerHTML = "Задания";
-	for (let i = 0; i < out.length; i++) {
+	for (let i = 0; i < todo.length; i++) {
 
 		let task_box   = document.createElement('div');
 		let input      = document.createElement('input');
@@ -42,9 +41,9 @@ function replace(){
 		let task_date  = document.createElement('p');
 		let button_del = document.createElement('button');
 
-		content = out[i].content;
-		date = out[i].date ;
-		isChecked = out[i].isChecked;
+		content = todo[i].content;
+		date = todo[i].date ;
+		isChecked = todo[i].isChecked;
 		
 		button_del.classList.add('delete-task-btn');
 		task_box.classList.add('task-box');
@@ -56,7 +55,7 @@ function replace(){
 		
 		count = i;
 		task_box.dataset.id = count;
-		out[i].id = count;
+		todo[i].id = count;
 
 		// fill task_box with contents
 		task_box.appendChild(input);
@@ -65,7 +64,7 @@ function replace(){
 		task_box.appendChild(task_date);
 		task_container.appendChild(task_box);
 			
-		if (out[i].isChecked){
+		if (todo[i].isChecked){
 			input.checked = true;
 			task_box.classList.add('active');
 		} else {
@@ -76,7 +75,6 @@ function replace(){
 		button_del.addEventListener('click', removeTask);
 		
 	}
-	 todo =  out;
 	 localStorage.setItem("todo",JSON.stringify(todo))
 }		
 
@@ -105,7 +103,6 @@ function addTask() {
 	let obj = new Task(content,date,isChecked);
 	todo.push(obj);
 	localStorage.setItem("todo",JSON.stringify(todo));
-	out = JSON.parse(localStorage.getItem("todo"));
 	replace()
 }
 
@@ -113,7 +110,7 @@ function addTask() {
 function removeTask() {
 	let elem 	= this;
 	let parent 	= elem.parentElement;
-	let box 	= parent.parentElement;
+	// let box 	= parent.parentElement;
 	let id      = +parent.dataset.id;
 
 	for (let i = 0; i < todo.length; i++) {
@@ -122,8 +119,7 @@ function removeTask() {
 			break;
 		}
 	}
-	box.removeChild(parent);
-	localStorage.setItem("todo",JSON.stringify(todo));
+	replace()
 }
 
 // line-through completed task
@@ -136,15 +132,12 @@ function checkTask() {
 		if(todo[i].id == id){
 			if (elem.checked){
 				todo[i].isChecked =true;
-				parent.classList.add('active');
-
 			} else {
 				todo[i].isChecked = false;
-				parent.classList.remove('active');
 			}
 		}
 	}	
-	localStorage.setItem("todo",JSON.stringify(todo));
+	replace()
 }
 
 // unload when selecting a file
@@ -153,16 +146,17 @@ btn_unload.onchange = function () {
 	let  fr = new FileReader();
 	fr.onload = function (info) {
 		a = JSON.parse(info.target.result);
-		if( out == null){
-			out = JSON.parse(info.target.result);
+		if( JSON.parse(localStorage.getItem("todo")) == null){
+			todo = JSON.parse(info.target.result);
 		} else {
 			for (let i = 0; i < a.length; i++) {
-				out.push(a[i]);
+				todo.push(a[i]);
 			}
 		}
 		replace();
 	}
-	fr.readAsText(this.files[0]);		
+	fr.readAsText(this.files[0]);
+	document.unload.reset();		
 }	
 
 // download when choosing a file
@@ -170,7 +164,6 @@ let btn_download 	= document.querySelector('.download_file');
 btn_download.addEventListener('change',download );
 function download() {
    	let file = this.files[0];
-   	console.log(todo);
     let blob = new Blob([JSON.stringify(todo)], {
         type: "text/plain;charset=utf-8"
     });
@@ -183,4 +176,5 @@ function download() {
     document.body.appendChild(a);
     a.click();
     delete a;
+    document.download.reset();
 }
