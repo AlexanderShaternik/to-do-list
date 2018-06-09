@@ -11,7 +11,7 @@ document.addEventListener("keydown", function(event) {
 // date
 let now = new Date();
 let date_now = document.querySelector('.date');
-date_now.placeholder= +now.getDate()+'.'+now.getMonth()+1+'.' +now.getFullYear();
+date_now.placeholder= +now.getDate()+'.'+(now.getMonth()+1) +'.' +now.getFullYear();
 
 let count = 0;
 let todo = [];
